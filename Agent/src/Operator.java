@@ -6,6 +6,11 @@ abstract public class Operator {
     }
 
     abstract public State apply(State state);
+    
+    public String toString()
+    {
+    	return name;
+    }
 
 
 

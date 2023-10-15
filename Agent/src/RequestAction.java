@@ -16,24 +16,36 @@ public class RequestAction extends Operator {
     @Override
     public State apply(State state) {
         if (state.getTimeRemaining() > 0 || state.getFutureResource() != null) {
-            System.out.println("we can't " + this.name + " request you have to wait for the delay");
+            //System.out.println("we can't " + this.name + " request you have to wait for the delay");
             return null;
         } else if (state.getEnergy().getAmount() < this.deductAmount) {
-            System.out.println("we can't " + this.name + " energy amount is" + state.getEnergy().getAmount() + "less than required units" + this.deductAmount + " energy");
+            //System.out.println("we can't " + this.name + " energy amount is" + state.getEnergy().getAmount() + "less than required units" + this.deductAmount + " energy");
             return null;
         } else if (state.getFood().getAmount() < this.deductAmount) {
-            System.out.println("we can't " + this.name + " food amount is" + state.getFood().getAmount() + "less than required units" + this.deductAmount + " food");
+            //System.out.println("we can't " + this.name + " food amount is" + state.getFood().getAmount() + "less than required units" + this.deductAmount + " food");
             return null;
         } else if (state.getMaterial().getAmount() < this.deductAmount) {
-            System.out.println("we can't " + this.name + " material amount is" + state.getMaterial().getAmount() + "less than required units" + this.deductAmount + " material");
+            //System.out.println("we can't " + this.name + " material amount is" + state.getMaterial().getAmount() + "less than required units" + this.deductAmount + " material");
             return null;
         }
+        
+        switch (this.name) {
+        case ResourceEnum.ENERGY:
+            if(state.getEnergy().getAmount() + this.addedAmount > state.getEnergy().getMAX()) return null;
+ 
+        case ResourceEnum.FOOD:
+        	if(state.getFood().getAmount() + this.addedAmount > state.getFood().getMAX()) return null;
+            
+        case ResourceEnum.MATERIAL:
+        	if(state.getMaterial().getAmount() + this.addedAmount > state.getMaterial().getMAX()) return null;
+            
+    }
 
 
-        System.out.println(state);
-        System.out.println(" |\n" +
-                this.name + " request \n" +
-                "V \n");
+        //System.out.println(state);
+        //System.out.println(" |\n" +
+                //this.name + " request \n" +
+                //"V \n");
 
 
         Resource futureResource = null;
@@ -52,7 +64,7 @@ public class RequestAction extends Operator {
 
         double newMoneySpent = state.getFood().getCost() * this.deductAmount + state.getMaterial().getCost() * this.deductAmount + state.getEnergy().getCost() * this.deductAmount;
         if (state.getBudget() < newMoneySpent) {
-            System.out.println("we can't " + this.name + "  budget is" + state.getBudget() + "less than required money" + newMoneySpent);
+            //System.out.println("we can't " + this.name + "  budget is" + state.getBudget() + "less than required money" + newMoneySpent);
             return null;
         }
 

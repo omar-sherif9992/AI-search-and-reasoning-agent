@@ -19,19 +19,19 @@ public class BuildAction extends Operator {
     @Override
     public State apply(State state) {
         if (state.getEnergy().getAmount() < this.unitsOfEnergy) {
-            System.out.println("we can't " + this.name + " energy amount is" + state.getEnergy().getAmount() + "less than required units" + this.unitsOfEnergy + " energy");
+            //System.out.println("we can't " + this.name + " energy amount is" + state.getEnergy().getAmount() + "less than required units" + this.unitsOfEnergy + " energy");
             return null;
         } else if (state.getFood().getAmount() < this.unitsOfFood) {
-            System.out.println("we can't " + this.name + " food amount is" + state.getFood().getAmount() + "less than required units" + this.unitsOfFood + " food");
+            //System.out.println("we can't " + this.name + " food amount is" + state.getFood().getAmount() + "less than required units" + this.unitsOfFood + " food");
             return null;
         } else if (state.getMaterial().getAmount() < this.unitsOfMaterial) {
-            System.out.println("we can't " + this.name + " material amount is" + state.getMaterial().getAmount() + "less than required units" + this.unitsOfMaterial + " material");
+            //System.out.println("we can't " + this.name + " material amount is" + state.getMaterial().getAmount() + "less than required units" + this.unitsOfMaterial + " material");
             return null;
         }
 
         double newMoneySpent = state.getFood().getCost() * this.unitsOfFood + state.getMaterial().getCost() * this.unitsOfMaterial + state.getEnergy().getCost() * this.unitsOfEnergy + this.cost;
         if (state.getBudget() < newMoneySpent) {
-            System.out.println("we can't " + this.name + "  budget is" + state.getBudget() + "less than required money" + newMoneySpent);
+            //System.out.println("we can't " + this.name + "  budget is" + state.getBudget() + "less than required money" + newMoneySpent);
             return null;
         }
 

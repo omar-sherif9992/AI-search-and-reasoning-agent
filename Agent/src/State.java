@@ -34,6 +34,11 @@ public class State {
         this.budget = state.getBudget();
         this.timeRemaining = 0;
         this.futureResource = null;
+        
+        if(state.getFutureResource() == null)
+        {
+        	return;
+        }
 
         double addedAmount = state.getFutureResource().getAmount();
         switch (state.getFutureResource().getName()){
@@ -50,13 +55,13 @@ public class State {
     }
     @Override
     public String toString() {
-        return "State{" +
+        return "State{\n" +
                 "moneySpent=" + moneySpent +
-                ", food=" + food +
-                ", energy=" + energy +
-                ", material=" + material +
-                ", levelOfProsperity=" + levelOfProsperity +
-                ", timeRemaining=" + timeRemaining +
+                ",\n food=" + food +
+                ",\n energy=" + energy +
+                ",\n material=" + material +
+                ",\n levelOfProsperity=" + levelOfProsperity +
+                ",\n timeRemaining=" + timeRemaining +
                 '}';
     }
 

@@ -7,7 +7,7 @@ public class LLAPSearch extends GenericSearch {
 
     private ArrayList<Operator> operators = new ArrayList<Operator>();
 
-    public void solve(String initialState, String strategy, Boolean visualize) {
+    public String solve(String initialState, String strategy, Boolean visualize) {
         String[] splitInitialState = initialState.split(";");
         String[] splitResource = splitInitialState[1].split(",");
         String[] splitResourcePrice = splitInitialState[2].split(",");
@@ -20,26 +20,28 @@ public class LLAPSearch extends GenericSearch {
         Node root = new Node(initState, 0, null, null);
         Tree tree = new Tree(root);
         initializeOperators(splitFood, splitMaterial, splitEnergy, splitBuild1, splitBuild2);
-        System.out.println(initState);
+        //System.out.println(initState);
         switch (strategy) {
             case "BFS":
-                BFS(tree, visualize);
-                break;
+            	return BFS.bfs(tree, visualize, operators);
+             
             case "DFS":
-                DFS(tree, visualize);
-                break;
+                return DFS.dfs(tree, visualize, operators);
+                
             case "UCS":
-                UCS(tree, visualize);
-                break;
+                return UniformCost.ucs(tree, visualize, operators);
+                
             case "IDS":
-                IDS(tree, visualize);
-                break;
+                return IDFS.iterativeDFS(tree, visualize, operators);
+                
             case "GREEDY":
-                GREEDY(tree, visualize);
-                break;
+                return GREEDY(tree, visualize);
+               
             case "ASTAR":
-                ASTAR(tree, visualize);
-                break;
+                return ASTAR(tree, visualize);
+            default:
+            	return "NONE";
+                
         }
     }
 
@@ -99,29 +101,71 @@ public class LLAPSearch extends GenericSearch {
 
         operators.add(new WaitAction("WAIT"));
     }
-
-    public void BFS(Tree tree, Boolean visualize) {
-        System.out.println("BFS");
+    
+    public static String pathToGoal(Node goal)
+	{
+		String path = "";
+		while(goal != null)
+		{
+		    path =  goal.toString() + "\n ============================ \n" + path;
+			goal = goal.getParentNode();
+		}
+		
+		if(path == "")
+			return path;
+		
+		return path.substring(0, path.length());
+	}
+	
+	public static String findPlan(Node goal)
+	{
+		
+		String plan = "";
+		while(goal.getParentNode() != null)
+		{
+		    plan =  goal.getAppliedOperator().toString() + "," + plan;
+			goal = goal.getParentNode();
+		}
+		
+		if(plan == "")
+			return plan;
+		
+		return plan.substring(0, plan.length()-1);
+		
+	}
+    
+    
+    public static boolean isGoal(Node node)
+    {
+    	return node.getState().getLevelOfProsperity() >= 100;
     }
 
-    public void DFS(Tree tree, Boolean visualize) {
-        System.out.println("DFS");
+    
+    public String BFS(Tree tree, Boolean visualize, ArrayList<Operator> operators) {
+        return ("BFS");
     }
 
-    public void UCS(Tree tree, Boolean visualize) {
-        System.out.println("UCS");
+    public String DFS(Tree tree, Boolean visualize) {
+        return ("DFS");
     }
 
-    public void IDS(Tree tree, Boolean visualize) {
-        System.out.println("IDS");
+    public String UCS(Tree tree, Boolean visualize) {
+        return ("UCS");
     }
 
-    public void GREEDY(Tree tree, Boolean visualize) {
-        System.out.println("GREEDY");
+    public String IDS(Tree tree, Boolean visualize) {
+        return ("IDS");
     }
 
-    public void ASTAR(Tree tree, Boolean visualize) {
-        System.out.println("ASTAR");
+    public String GREEDY(Tree tree, Boolean visualize) {
+        return ("GREEDY");
     }
+
+    public String ASTAR(Tree tree, Boolean visualize) {
+        return ("ASTAR");
+    }
+    
+    
+    
 
 }

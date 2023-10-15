@@ -31,6 +31,10 @@ public class Resource {
                 ", name=" + name +
                 '}';
     }
+    
+    public double getMAX() {
+        return MAX;
+    }
 
     public double getCost() {
         return cost;

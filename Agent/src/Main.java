@@ -8,6 +8,9 @@ public class Main {
             "500,8,6,3,40;";
 
         LLAPSearch llapSearch = new LLAPSearch();
-        llapSearch.solve(init, "BFS", true);    
+        String res = llapSearch.solve(init, "UCS", true);  
+        System.out.println("===================");
+        System.out.println(res);
+        
     }
 }
