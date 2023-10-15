@@ -7,5 +7,11 @@ public class Node {
     private final int level;
     private Operator appliedOperator;
 
-
+    public Node(State state, int level, Node parentNode, Operator appliedOperator) {
+        this.state = state;
+        this.level = level;
+        this.childrenNode = new ArrayList<Node>();
+        this.parentNode = parentNode;
+        this.appliedOperator = appliedOperator;
+    }
 }

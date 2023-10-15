@@ -6,12 +6,14 @@ public class BuildAction extends Operator {
     private double cost;
 
 
-    public BuildAction(String name, double addProsperity, double unitsOfFood, double unitsOfMaterial, double unitsOfEnergy) {
+    public BuildAction(String name, double addProsperity, double unitsOfFood, double unitsOfMaterial, double unitsOfEnergy, double cost) {
+        super(name);
         this.addProsperity = addProsperity;
         this.unitsOfFood = unitsOfFood;
         this.unitsOfMaterial = unitsOfMaterial;
         this.unitsOfEnergy = unitsOfEnergy;
         this.name = name;
+        this.cost = cost;
     }
 
     @Override
@@ -27,7 +29,7 @@ public class BuildAction extends Operator {
             return null;
         }
 
-        double newMoneySpent = state.getFood().getCost() * this.unitsOfFood + state.getMaterial().getCost() * this.unitsOfMaterial + state.getEnergy().getCost() * this.unitsOfEnergy;
+        double newMoneySpent = state.getFood().getCost() * this.unitsOfFood + state.getMaterial().getCost() * this.unitsOfMaterial + state.getEnergy().getCost() * this.unitsOfEnergy + this.cost;
         if (state.getBudget() < newMoneySpent) {
             System.out.println("we can't " + this.name + "  budget is" + state.getBudget() + "less than required money" + newMoneySpent);
             return null;

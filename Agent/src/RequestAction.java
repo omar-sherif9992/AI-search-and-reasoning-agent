@@ -6,6 +6,12 @@ public class RequestAction extends Operator {
 
     private int deductAmount = 1;
 
+    public RequestAction(String name, int addedAmount, int delay) {
+        super(name);
+        this.addedAmount = addedAmount;
+        this.delay = delay;
+    }
+
 
     @Override
     public State apply(State state) {
