@@ -66,7 +66,7 @@ public class LLAPSearch extends GenericSearch {
         Resource material = new Resource(materialPrice, initialMaterialAmount,
                 ResourceEnum.MATERIAL);
                 
-        return new State(Double.parseDouble(splitInitialState[0]),
+        return new State(0,
                 food,
                 energy,
                 material,

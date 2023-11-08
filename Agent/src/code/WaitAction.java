@@ -31,7 +31,7 @@ public class WaitAction extends Operator {
                 newEnergyResource,
                 newMaterialResource,
                 state.getLevelOfProsperity(),
-                state.getTimeRemaining(),
+                state.getTimeRemaining() - 1,
                 state.getFutureResource(),
                 state.getBudget() - currMoneySpent
         );

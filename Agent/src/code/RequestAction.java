@@ -17,6 +17,9 @@ public class RequestAction extends Operator {
     @Override
     public State apply(State state) {
     	
+    	if(state.getFutureResource() != null)
+    		return null;
+    	
     	state.checkDelay();
     	
         if (state.getEnergy().getAmount() < this.deductAmount) {
@@ -46,7 +49,6 @@ public class RequestAction extends Operator {
 
         double newMoneySpent = (state.getFood().getCost() * this.deductAmount) + (state.getMaterial().getCost() * this.deductAmount) + (state.getEnergy().getCost() * this.deductAmount);
         if (state.getBudget() < newMoneySpent) {
-            //System.out.println("we can't " + this.name + "  budget is" + state.getBudget() + "less than required money" + newMoneySpent);
             return null;
         }
 

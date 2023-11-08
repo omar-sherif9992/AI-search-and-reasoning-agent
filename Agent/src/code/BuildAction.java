@@ -49,7 +49,7 @@ public class BuildAction extends Operator {
         
         
         State newState = new State(newMoneySpent, newFoodResource, newEnergyResource, newMaterialResource, 
-        		newProsperityLevel, state.getTimeRemaining(), state.getFutureResource(), newBudget);
+        		newProsperityLevel, state.getTimeRemaining() - 1, state.getFutureResource(), newBudget);
         
         return  newState;
     }

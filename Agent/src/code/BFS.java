@@ -5,6 +5,8 @@ import java.util.*;
 
 public class BFS {
 	
+	
+	
 	public static String bfs(Tree tree, boolean visualize, ArrayList<Operator> operators)
 	{
 		
@@ -54,7 +56,7 @@ public class BFS {
 		int monetaryCost = (int)goal.getState().getMoneySpent();
 	
 		
-		//System.out.println(LLAPSearch.pathToGoal(goal));
+		System.out.println(LLAPSearch.pathToGoal(goal));
 		System.out.println(plan);
 		return plan + ";" + monetaryCost + ";" + nodesExpanded;
 		

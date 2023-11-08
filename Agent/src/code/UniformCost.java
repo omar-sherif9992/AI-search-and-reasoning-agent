@@ -53,7 +53,7 @@ public class UniformCost {
 		}
 		
 		String plan = LLAPSearch.findPlan(goal);
-		double monetaryCost = goal.getState().getMoneySpent();
+		int monetaryCost = (int)goal.getState().getMoneySpent();
 	
 		
 		System.out.println(LLAPSearch.pathToGoal(goal));

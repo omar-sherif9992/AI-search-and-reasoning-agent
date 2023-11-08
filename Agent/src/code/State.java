@@ -107,13 +107,10 @@ public class State {
     
     public void checkDelay()
     {
-    	if(this.futureResource != null && this.timeRemaining > 0)
+    	
+    	if(this.timeRemaining <= 1 && this.futureResource != null)
     	{
-    		this.timeRemaining--;
-    	}
-    	if(this.timeRemaining <= 0 && this.futureResource != null)
-    	{
-    		//Here i want to make the delivery
+    		//Here delivery done
     		
     		double addedAmount = this.getFutureResource().getAmount();
             switch (this.getFutureResource().getName()){
@@ -127,8 +124,6 @@ public class State {
                         addedAmount+this.material.getAmount()
                 );break;
             }
-    		
-    		this.timeRemaining = 0;
             this.futureResource = null;
     	}
     }

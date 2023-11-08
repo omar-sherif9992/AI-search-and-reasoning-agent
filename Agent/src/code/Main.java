@@ -15,22 +15,8 @@ public class Main {
                 "300,5,7,3,20;" +
                 "500,8,6,3,40;";
         
-        for(int i = 0; i < 2; ++i)
-        {
-        	if(i == 0)
-        	{
-        		//String res = LLAPSearch.solve(init0, "BF", false);  
-                //System.out.println("===================");
-                //System.out.println(res);
-        	}
-        	else
-        	{
-        		String res = LLAPSearch.solve(init1, "BF", false);  
-                System.out.println("===================");
-               
-        	}
-        		
-        }
+        String res = LLAPSearch.solve(init1, "BF", false);  
+        System.out.println("===================");
         
     }
 }

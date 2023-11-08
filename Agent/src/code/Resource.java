@@ -8,6 +8,7 @@ public class Resource {
 
     private final int MAX=50;
 
+    
     private String name;
 
     public Resource( double cost, double amount, String name) {
