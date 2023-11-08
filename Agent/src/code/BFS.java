@@ -9,7 +9,6 @@ public class BFS {
 	
 	public static String bfs(Tree tree, boolean visualize, ArrayList<Operator> operators)
 	{
-		
 		Queue<Node> queue = new LinkedList<Node>();
 		queue.add(tree.root);
 		
@@ -41,6 +40,7 @@ public class BFS {
 					//Here i can't branch with this operator
 					continue;
 				}
+
 				//Here i need to make a new node and push it to the queue
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				currNode.addChild(child);

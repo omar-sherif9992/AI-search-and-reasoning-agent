@@ -7,6 +7,7 @@ public class LLAPSearch extends GenericSearch {
     private static double budget = 100000;
 
     private static ArrayList<Operator> operators = new ArrayList<Operator>();
+    private static HashSet<String> visitedStates = new HashSet<String>();
 
     public static String solve(String initialState, String strategy, Boolean visualize) {
         String[] splitInitialState = initialState.split(";");
@@ -18,6 +19,7 @@ public class LLAPSearch extends GenericSearch {
         String[] splitBuild1 = splitInitialState[6].split(",");
         String[] splitBuild2 = splitInitialState[7].split(",");
         operators.clear();
+        visitedStates.clear();
         budget = 100000;
         State initState = getInitState(splitInitialState, splitResource, splitResourcePrice);
       
