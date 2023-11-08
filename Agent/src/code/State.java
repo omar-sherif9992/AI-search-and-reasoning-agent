@@ -107,11 +107,11 @@ public class State {
     
     public void checkDelay()
     {
-    	if(futureResource != null && timeRemaining > 0)
+    	if(this.futureResource != null && this.timeRemaining > 0)
     	{
-    		timeRemaining--;
+    		this.timeRemaining--;
     	}
-    	if(timeRemaining == 0 && futureResource != null)
+    	if(this.timeRemaining <= 0 && this.futureResource != null)
     	{
     		//Here i want to make the delivery
     		

@@ -17,11 +17,6 @@ public class RequestAction extends Operator {
     @Override
     public State apply(State state) {
     	
-        /*if (state.getTimeRemaining() > 0 || state.getFutureResource() != null) {
-            //System.out.println("we can't " + this.name + " request you have to wait for the delay");
-            return null;
-        }*/
-    	
     	state.checkDelay();
     	
         if (state.getEnergy().getAmount() < this.deductAmount) {
@@ -35,28 +30,6 @@ public class RequestAction extends Operator {
             return null;
         }
         
-        
-        /*
-        switch (this.name) {
-        case ResourceEnum.ENERGY:
-            if(state.getEnergy().getAmount() + this.addedAmount > state.getEnergy().getMAX()) return null;
- 
-        case ResourceEnum.FOOD:
-        	if(state.getFood().getAmount() + this.addedAmount > state.getFood().getMAX()) return null;
-            
-        case ResourceEnum.MATERIAL:
-        	if(state.getMaterial().getAmount() + this.addedAmount > state.getMaterial().getMAX()) return null;
-        }*/
-        
-        
-
-
-        //System.out.println(state);
-        //System.out.println(" |\n" +
-                //this.name + " request \n" +
-                //"V \n");
-
-
         Resource futureResource = null;
 
         switch (this.name) {
@@ -71,7 +44,7 @@ public class RequestAction extends Operator {
                 break;
         }
 
-        double newMoneySpent = state.getFood().getCost() * this.deductAmount + state.getMaterial().getCost() * this.deductAmount + state.getEnergy().getCost() * this.deductAmount;
+        double newMoneySpent = (state.getFood().getCost() * this.deductAmount) + (state.getMaterial().getCost() * this.deductAmount) + (state.getEnergy().getCost() * this.deductAmount);
         if (state.getBudget() < newMoneySpent) {
             //System.out.println("we can't " + this.name + "  budget is" + state.getBudget() + "less than required money" + newMoneySpent);
             return null;
@@ -97,12 +70,6 @@ public class RequestAction extends Operator {
                 futureResource,
                 newBudget
         );
-
-        /*if (newTimeRemaining == 0 && state.getFutureResource() != null) {
-            // we used the WAIT Constructur it will make futureResource null and acquire future resource
-            return new State(newState);
-        }*/
-
         return newState;
     }
 

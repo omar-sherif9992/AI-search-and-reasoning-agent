@@ -50,7 +50,7 @@ public class Resource {
     }
 
     public void setAmount(double amount) {
-        this.amount = Math.max(amount,this.MAX);
+        this.amount = Math.min(amount,this.MAX);
         
     }
 }

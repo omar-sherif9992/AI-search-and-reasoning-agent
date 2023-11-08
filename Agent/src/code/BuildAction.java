@@ -46,13 +46,10 @@ public class BuildAction extends Operator {
         Resource newFoodResource = new Resource(state.getFood().getCost(), state.getFood().getAmount() - this.unitsOfFood, state.getFood().getName());
         Resource newMaterialResource = new Resource(state.getMaterial().getCost(), state.getMaterial().getAmount() - this.unitsOfMaterial, state.getMaterial().getName());
         Resource newEnergyResource = new Resource(state.getEnergy().getCost(), state.getEnergy().getAmount() - this.unitsOfEnergy, state.getEnergy().getName());
-        //int newTimeRemaining = Math.max(0, state.getTimeRemaining() - 1);
-        State newState = new State(newMoneySpent, newFoodResource, newEnergyResource, newMaterialResource, newProsperityLevel, state.getTimeRemaining(), state.getFutureResource(), newBudget);
-
-        /*if (newTimeRemaining == 0 && state.getFutureResource() != null) {
-            // we used the WAIT Constructur it will make futureResource null
-            return new State(newState);
-        }*/
+        
+        
+        State newState = new State(newMoneySpent, newFoodResource, newEnergyResource, newMaterialResource, 
+        		newProsperityLevel, state.getTimeRemaining(), state.getFutureResource(), newBudget);
         
         return  newState;
     }

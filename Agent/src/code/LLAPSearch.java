@@ -17,7 +17,10 @@ public class LLAPSearch extends GenericSearch {
         String[] splitEnergy = splitInitialState[5].split(",");
         String[] splitBuild1 = splitInitialState[6].split(",");
         String[] splitBuild2 = splitInitialState[7].split(",");
+        operators.clear();
+        budget = 100000;
         State initState = getInitState(splitInitialState, splitResource, splitResourcePrice);
+      
         Node root = new Node(initState, 0, null, null);
         Tree tree = new Tree(root);
         initializeOperators(splitFood, splitMaterial, splitEnergy, splitBuild1, splitBuild2);
@@ -63,7 +66,7 @@ public class LLAPSearch extends GenericSearch {
         Resource material = new Resource(materialPrice, initialMaterialAmount,
                 ResourceEnum.MATERIAL);
                 
-        return new State(0,
+        return new State(Double.parseDouble(splitInitialState[0]),
                 food,
                 energy,
                 material,
@@ -73,6 +76,14 @@ public class LLAPSearch extends GenericSearch {
     private static void initializeOperators(String[] splitFood, String[] splitMaterial, String[] splitEnergy, String[] splitBuild1,
             String[] splitBuild2) {
     	
+    	double prosperityBuild2 = Double.parseDouble(splitBuild2[4]);
+        double foodUseBuild2 = Double.parseDouble(splitBuild2[1]);
+        double materialUseBuild2 = Double.parseDouble(splitBuild2[2]);
+        double energyUseBuild2 = Double.parseDouble(splitBuild2[3]);
+        double priceBuild2 = Double.parseDouble(splitBuild2[0]);
+        operators.add(new BuildAction("BUILD2", prosperityBuild2, foodUseBuild2,
+                materialUseBuild2, energyUseBuild2, priceBuild2));
+    	
     	double prosperityBuild1 = Double.parseDouble(splitBuild1[4]);
         double foodUseBuild1 = Double.parseDouble(splitBuild1[1]);
         double materialUseBuild1 = Double.parseDouble(splitBuild1[2]);
@@ -81,17 +92,11 @@ public class LLAPSearch extends GenericSearch {
         operators.add(new BuildAction("BUILD1", prosperityBuild1, foodUseBuild1,
                 materialUseBuild1, energyUseBuild1, priceBuild1));
 
-        double prosperityBuild2 = Double.parseDouble(splitBuild2[4]);
-        double foodUseBuild2 = Double.parseDouble(splitBuild2[1]);
-        double materialUseBuild2 = Double.parseDouble(splitBuild2[2]);
-        double energyUseBuild2 = Double.parseDouble(splitBuild2[3]);
-        double priceBuild2 = Double.parseDouble(splitBuild2[0]);
-        operators.add(new BuildAction("BUILD2", prosperityBuild2, foodUseBuild2,
-                materialUseBuild2, energyUseBuild2, priceBuild2));
-        
-        int amountRequestFood = Integer.parseInt(splitFood[0]);
+    	
+    	int amountRequestFood = Integer.parseInt(splitFood[0]);
         int delayRequestFood = Integer.parseInt(splitFood[1]);
         operators.add(new RequestAction(ResourceEnum.FOOD, amountRequestFood, delayRequestFood));
+        
 
         int amountRequestMaterial = Integer.parseInt(splitMaterial[0]);
         int delayRequestMaterial = Integer.parseInt(splitMaterial[1]);
@@ -100,8 +105,10 @@ public class LLAPSearch extends GenericSearch {
         int amountRequestEnergy = Integer.parseInt(splitEnergy[0]);
         int delayRequestEnergy = Integer.parseInt(splitEnergy[1]);
         operators.add(new RequestAction(ResourceEnum.ENERGY, amountRequestEnergy, delayRequestEnergy));
-
+        
         operators.add(new WaitAction("WAIT"));
+    	
+
     }
     
     public static String pathToGoal(Node goal)

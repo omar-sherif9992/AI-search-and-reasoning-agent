@@ -32,7 +32,8 @@ public class BFS {
 			//try the different operators on this node
 			for(Operator operator : operators)
 			{
-				State newState = operator.apply(currNode.getState());
+				State tst = currNode.getState();
+				State newState = operator.apply(tst);
 				if(newState == null)
 				{
 					//Here i can't branch with this operator
@@ -54,6 +55,7 @@ public class BFS {
 	
 		
 		//System.out.println(LLAPSearch.pathToGoal(goal));
+		System.out.println(plan);
 		return plan + ";" + monetaryCost + ";" + nodesExpanded;
 		
 		
