@@ -6,9 +6,25 @@ import java.util.HashSet;
 import java.util.PriorityQueue;
 
 public class GreedySearch {
+	
+	public static double heuristic1(State state, ArrayList<Operator> operators)
+	{
+		double mx = 0;
+		double mn = Integer.MAX_VALUE;
+		for(Operator operator : operators)
+		{
+			if(operator.name == "BUILD1") {
+				mx = Math.max(mx, ((BuildAction)operator).cost);
+				mn = Math.min(mn, ((BuildAction)operator).cost);
+			}
+			
+		}
+		return ( (100 - state.getLevelOfProsperity() ) / mx)  * mn;
+		
+	}
     
-    public String greedySearch(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates) {
-        Comparator<Node> customComparator = (a, b) -> Double.compare(100 - a.getState().getLevelOfProsperity(),100 -  b.getState().getLevelOfProsperity());
+    public static String greedySearch(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates, int heuristicNumber) {
+        Comparator<Node> customComparator = (a, b) -> Double.compare(heuristic1(a.getState(), operators), heuristic1(b.getState(), operators));
     
         PriorityQueue<Node> pq = new PriorityQueue<Node>(customComparator);
         
@@ -33,15 +49,15 @@ public class GreedySearch {
 			for(Operator operator : operators)
 			{
 				State newState = operator.apply(currNode.getState());
-				if(newState == null)
+				if(newState == null || visitedStates.contains(newState.toString()))
 				{
 					//Here i can't branch with this operator
 					continue;
 				}
 				//Here i need to make a new node and push it to the queue
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
-				currNode.addChild(child);
 				pq.add(child);
+				visitedStates.add(newState.toString());
 			}
 		}
 		if(goal == null)

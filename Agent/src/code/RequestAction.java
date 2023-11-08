@@ -17,10 +17,10 @@ public class RequestAction extends Operator {
     @Override
     public State apply(State state) {
     	
+    	state.checkDelay();
+    	
     	if(state.getFutureResource() != null)
     		return null;
-    	
-    	state.checkDelay();
     	
         if (state.getEnergy().getAmount() < this.deductAmount) {
             //System.out.println("we can't " + this.name + " energy amount is" + state.getEnergy().getAmount() + "less than required units" + this.deductAmount + " energy");

@@ -7,8 +7,13 @@ public class WaitAction extends Operator {
 
     @Override
     public State apply(State state) {
-        
+    	
+    	if(state.getFutureResource() == null)
+    		return null;
+    	
     	state.checkDelay();
+    	
+    	
     	
     	if(state.getFood().getAmount() < 1 || state.getMaterial().getAmount() < 1 
     			|| state.getEnergy().getAmount() < 1)

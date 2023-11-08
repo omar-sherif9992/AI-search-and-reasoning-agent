@@ -7,8 +7,9 @@ import java.util.PriorityQueue;
 
 public class AStar {
 
-    public String aStar(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates) {
-        Comparator<Node> customComparator = (a, b) -> Double.compare(100 - a.getState().getLevelOfProsperity(),100 -  b.getState().getLevelOfProsperity());
+	
+    public static String aStar(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates, int heuristicNumber) {
+        Comparator<Node> customComparator = (a, b) -> Double.compare(GreedySearch.heuristic1(a.getState(), operators) + a.getState().getMoneySpent(),GreedySearch.heuristic1(b.getState(), operators) + b.getState().getMoneySpent());
     
         PriorityQueue<Node> pq = new PriorityQueue<Node>(customComparator);
         
@@ -33,15 +34,15 @@ public class AStar {
 			for(Operator operator : operators)
 			{
 				State newState = operator.apply(currNode.getState());
-				if(newState == null)
+				if(newState == null || visitedStates.contains(newState.toString()))
 				{
 					//Here i can't branch with this operator
 					continue;
 				}
 				//Here i need to make a new node and push it to the queue
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
-				currNode.addChild(child);
 				pq.add(child);
+				visitedStates.add(newState.toString());
 			}
 		}
 		if(goal == null)

@@ -5,7 +5,6 @@ public class Node {
 	
 	
     private Node parentNode;
-    private ArrayList<Node> childrenNode;
     private State state;
     private final int level;
     private Operator appliedOperator;
@@ -13,7 +12,6 @@ public class Node {
     public Node(State state, int level, Node parentNode, Operator appliedOperator) {
         this.state = state;
         this.level = level;
-        this.childrenNode = new ArrayList<Node>();
         this.parentNode = parentNode;
         this.appliedOperator = appliedOperator;
     }
@@ -35,13 +33,6 @@ public class Node {
 		this.parentNode = parentNode;
 	}
 
-	public ArrayList<Node> getChildrenNode() {
-		return childrenNode;
-	}
-
-	public void setChildrenNode(ArrayList<Node> childrenNode) {
-		this.childrenNode = childrenNode;
-	}
 
 	public State getState() {
 		return state;
@@ -63,13 +54,6 @@ public class Node {
 		return level;
 	}
 	
-	public void addChild(Node child) {
-		this.childrenNode.add(child);
-	}
-
-    
-  
-
-    
+   
  
 }

@@ -4,7 +4,7 @@ public class BuildAction extends Operator {
     private double unitsOfFood;
     private double unitsOfMaterial;
     private double unitsOfEnergy;
-    private double cost;
+    public double cost;
 
 
     public BuildAction(String name, double addProsperity, double unitsOfFood, double unitsOfMaterial, double unitsOfEnergy, double cost) {
@@ -53,6 +53,8 @@ public class BuildAction extends Operator {
         
         return  newState;
     }
+    
+ 
 
 
 }

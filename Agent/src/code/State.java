@@ -60,12 +60,13 @@ public class State {
     @Override
     public String toString() {
         return "State{\n" +
-                "moneySpent=" + moneySpent +
+                //"moneySpent=" + moneySpent +      // + MONEY 
                 ",\n food=" + food +
                 ",\n energy=" + energy +
                 ",\n material=" + material +
                 ",\n levelOfProsperity=" + levelOfProsperity +
                 ",\n timeRemaining=" + timeRemaining +
+                ",\n futureResource=" + futureResource +
                 '}';
     }
 

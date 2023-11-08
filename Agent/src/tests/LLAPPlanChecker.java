@@ -293,6 +293,7 @@ public boolean applyPlan(String grid, String solution){
 	if(!linkin) {
 		return false;
 		}
+	
 
     return s.cool() && s.v12 ==blue;
 }

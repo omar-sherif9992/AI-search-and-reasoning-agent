@@ -29,22 +29,29 @@ public class LLAPSearch extends GenericSearch {
         //System.out.println(initState);
         switch (strategy) {
             case "BF":
-            	return BFS.bfs(tree, visualize, operators);
+            	return BFS.bfs(tree, visualize, operators, visitedStates);
              
             case "DF":
-                return DFS.dfs(tree, visualize, operators);
+                return DFS.dfs(tree, visualize, operators, visitedStates);
                 
-            case "UCS":
-                return UniformCost.ucs(tree, visualize, operators);
+            case "UC":
+                return UniformCost.ucs(tree, visualize, operators, visitedStates);
                 
-            case "IDS":
-                return IDFS.iterativeDFS(tree, visualize, operators);
+            case "ID":
+                return IDFS.iterativeDFS(tree, visualize, operators, visitedStates);
+              
+            case "GR1":
+                return GreedySearch.greedySearch(tree, visualize, operators, visitedStates, 1);
                 
-            case "GREEDY":
-                return GREEDY(tree, visualize);
+            case "GR2":
+                return GreedySearch.greedySearch(tree, visualize, operators, visitedStates, 2);
                
-            case "ASTAR":
-                return ASTAR(tree, visualize);
+            case "AS1":
+                return AStar.aStar(tree, visualize, operators, visitedStates, 1);
+                
+            case "AS2":
+            	return AStar.aStar(tree, visualize, operators, visitedStates, 2);
+               
             default:
             	return "NONE";
                 

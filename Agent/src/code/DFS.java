@@ -4,7 +4,7 @@ import java.util.*;
 
 public class DFS {
 	
-	public static String dfs(Tree tree, boolean visualize, ArrayList<Operator> operators)
+	public static String dfs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited)
 	{
 		Stack<Node> stack = new Stack<Node>();
 		stack.push(tree.root);
@@ -29,15 +29,15 @@ public class DFS {
 			for(Operator operator : operators)
 			{
 				State newState = operator.apply(currNode.getState());
-				if(newState == null)
+				if(newState == null || visited.contains(newState.toString()))
 				{
 					//Here i can't branch with this operator
 					continue;
 				}
 				//Here i need to make a new node and push it to the stack
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
-				currNode.addChild(child);
 				stack.push(child);
+				visited.add(newState.toString());
 			}
 		}
 		
