@@ -1,6 +1,6 @@
 package code;
 public class BuildAction extends Operator {
-    private double addProsperity;
+    public double addProsperity;
     private double unitsOfFood;
     private double unitsOfMaterial;
     private double unitsOfEnergy;

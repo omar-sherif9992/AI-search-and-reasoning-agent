@@ -14,7 +14,7 @@ public class GreedySearch {
 		for(Operator operator : operators)
 		{
 			if(operator.name == "BUILD1") {
-				mx = Math.max(mx, ((BuildAction)operator).cost);
+				mx = Math.max(mx, ((BuildAction)operator).addProsperity);
 				mn = Math.min(mn, ((BuildAction)operator).cost);
 			}
 			
