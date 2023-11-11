@@ -13,7 +13,7 @@ public class GreedySearch {
 		double mn = Integer.MAX_VALUE;
 		for(Operator operator : operators)
 		{
-			if(operator.name == "BUILD1") {
+			if(operator.name.equals("BUILD1") || operator.name.equals("BUILD2")) {
 				mx = Math.max(mx, ((BuildAction)operator).addProsperity);
 				mn = Math.min(mn, ((BuildAction)operator).cost);
 			}
