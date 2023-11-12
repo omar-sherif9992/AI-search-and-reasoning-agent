@@ -9,9 +9,10 @@ public class AStar {
 
 	
     public static String aStar(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates, int heuristicNumber) {
-        Comparator<Node> customComparator = (a, b) -> Double.compare(GreedySearch.heuristic1(a.getState(), operators) + a.getState().getMoneySpent(),GreedySearch.heuristic1(b.getState(), operators) + b.getState().getMoneySpent());
-    
-        PriorityQueue<Node> pq = new PriorityQueue<Node>(customComparator);
+        Comparator<Node> customComparator1 = (a, b) -> Double.compare(GreedySearch.heuristic1(a.getState(), operators) + a.getState().getMoneySpent(),GreedySearch.heuristic1(b.getState(), operators) + b.getState().getMoneySpent());
+        Comparator<Node> customComparator2 = (a, b) -> Double.compare(GreedySearch.heuristic2(a.getState(), operators) + a.getState().getMoneySpent(),GreedySearch.heuristic2(b.getState(), operators) + b.getState().getMoneySpent());
+        
+        PriorityQueue<Node> pq = new PriorityQueue<Node>(heuristicNumber == 1 ? customComparator1:customComparator2);
         
         pq.add(tree.root);
         
@@ -53,8 +54,10 @@ public class AStar {
 		String plan = LLAPSearch.findPlan(goal);
 		int monetaryCost = (int)goal.getState().getMoneySpent();
 	
-		
-		System.out.println(LLAPSearch.pathToGoal(goal));
+		if(visualize)
+		{
+			System.out.println(LLAPSearch.pathToGoal(goal));
+		}
 		return plan + ";" + monetaryCost + ";" + nodesExpanded;
     }
     }

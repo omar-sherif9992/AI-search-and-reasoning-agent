@@ -56,7 +56,10 @@ public class UniformCost {
 		int monetaryCost = (int)goal.getState().getMoneySpent();
 	
 		
-		System.out.println(LLAPSearch.pathToGoal(goal));
+		if(visualize)
+		{
+			System.out.println(LLAPSearch.pathToGoal(goal));
+		}
 		return plan + ";" + monetaryCost + ";" + nodesExpanded;
 		
 	}

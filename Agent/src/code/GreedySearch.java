@@ -13,7 +13,7 @@ public class GreedySearch {
 		double mn = Integer.MAX_VALUE;
 		for(Operator operator : operators)
 		{
-			if(operator.name.equals("BUILD1") || operator.name.equals("BUILD2")) {
+			if(operator.name == "BUILD1") {
 				mx = Math.max(mx, ((BuildAction)operator).addProsperity);
 				mn = Math.min(mn, ((BuildAction)operator).cost);
 			}
@@ -22,11 +22,17 @@ public class GreedySearch {
 		return ( (100 - state.getLevelOfProsperity() ) / mx)  * mn;
 		
 	}
+	public static double heuristic2(State state, ArrayList<Operator> operators)
+	{
+		return ( (100 - state.getLevelOfProsperity() ) / 100)  * state.getMoneySpent();
+	}
     
     public static String greedySearch(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates, int heuristicNumber) {
-        Comparator<Node> customComparator = (a, b) -> Double.compare(heuristic1(a.getState(), operators), heuristic1(b.getState(), operators));
-    
-        PriorityQueue<Node> pq = new PriorityQueue<Node>(customComparator);
+        Comparator<Node> customComparator1 = (a, b) -> Double.compare(heuristic1(a.getState(), operators), heuristic1(b.getState(), operators));
+        Comparator<Node> customComparator2 = (a, b) -> Double.compare(heuristic2(a.getState(), operators), heuristic2(b.getState(), operators));
+        
+        
+        PriorityQueue<Node> pq = new PriorityQueue<Node>((heuristicNumber)== 1 ? customComparator1:customComparator2);
         
         pq.add(tree.root);
         
@@ -69,7 +75,10 @@ public class GreedySearch {
 		int monetaryCost = (int)goal.getState().getMoneySpent();
 	
 		
-		System.out.println(LLAPSearch.pathToGoal(goal));
+		if(visualize)
+		{
+			System.out.println(LLAPSearch.pathToGoal(goal));
+		}
 		return plan + ";" + monetaryCost + ";" + nodesExpanded;
     }
 }

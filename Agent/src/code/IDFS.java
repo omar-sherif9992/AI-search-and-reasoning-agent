@@ -15,8 +15,9 @@ public class IDFS {
 		{
 			visited = new HashSet<String>();
 			flag = false;
-			String currSolution = dfsSpecial(tree, visualize, operators, depth, visited);
 			
+			String currSolution = dfsSpecial(tree, visualize, operators, depth, visited);
+	
 			if(currSolution != "NOSOLUTION")
 				return currSolution;
 			if(flag == false)
@@ -81,7 +82,10 @@ public class IDFS {
 		String plan = LLAPSearch.findPlan(goal);
 		int monetaryCost = (int)goal.getState().getMoneySpent();
 		
-		System.out.println(LLAPSearch.pathToGoal(goal));
+		if(visualize)
+		{
+			System.out.println(LLAPSearch.pathToGoal(goal));
+		}
 		return plan + ";" + monetaryCost + ";" + nodesExpanded;
 		
 	}

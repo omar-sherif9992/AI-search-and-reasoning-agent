@@ -4,12 +4,12 @@ import java.util.*;
 import enums.ResourceEnum;
 
 public class LLAPSearch extends GenericSearch {
-    private static double budget = 100000;
-
-    private static ArrayList<Operator> operators = new ArrayList<Operator>();
-    private static HashSet<String> visitedStates = new HashSet<String>();
-
+   
     public static String solve(String initialState, String strategy, Boolean visualize) {
+    	 double budget = 100000;
+    	 ArrayList<Operator> operators = new ArrayList<Operator>();
+    	 HashSet<String> visitedStates = new HashSet<String>();
+
         String[] splitInitialState = initialState.split(";");
         String[] splitResource = splitInitialState[1].split(",");
         String[] splitResourcePrice = splitInitialState[2].split(",");
@@ -18,14 +18,12 @@ public class LLAPSearch extends GenericSearch {
         String[] splitEnergy = splitInitialState[5].split(",");
         String[] splitBuild1 = splitInitialState[6].split(",");
         String[] splitBuild2 = splitInitialState[7].split(",");
-        operators.clear();
-        visitedStates.clear();
-        budget = 100000;
-        State initState = getInitState(splitInitialState, splitResource, splitResourcePrice);
+        
+        State initState = getInitState(splitInitialState, splitResource, splitResourcePrice,budget);
       
         Node root = new Node(initState, 0, null, null);
         Tree tree = new Tree(root);
-        initializeOperators(splitFood, splitMaterial, splitEnergy, splitBuild1, splitBuild2);
+        initializeOperators(splitFood, splitMaterial, splitEnergy, splitBuild1, splitBuild2, operators);
         //System.out.println(initState);
         switch (strategy) {
             case "BF":
@@ -58,7 +56,7 @@ public class LLAPSearch extends GenericSearch {
         }
     }
 
-    private static State getInitState(String[] splitInitialState, String[] splitResource, String[] splitResourcePrice) {
+    private static State getInitState(String[] splitInitialState, String[] splitResource, String[] splitResourcePrice, double budget) {
         double foodPrice = Double.parseDouble(splitResourcePrice[0]);
         double initialFoodAmount = Double.parseDouble(splitResource[0]);
 
@@ -83,7 +81,7 @@ public class LLAPSearch extends GenericSearch {
     }
 
     private static void initializeOperators(String[] splitFood, String[] splitMaterial, String[] splitEnergy, String[] splitBuild1,
-            String[] splitBuild2) {
+            String[] splitBuild2, ArrayList<Operator> operators) {
     	
     	double prosperityBuild2 = Double.parseDouble(splitBuild2[4]);
         double foodUseBuild2 = Double.parseDouble(splitBuild2[1]);

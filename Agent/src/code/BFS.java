@@ -45,6 +45,7 @@ public class BFS {
 				visited.add(newState.toString());
 			}
 		}
+		
 		if(goal == null)
 		{
 			return "NOSOLUTION";
@@ -54,8 +55,11 @@ public class BFS {
 		int monetaryCost = (int)goal.getState().getMoneySpent();
 	
 		
-		System.out.println(LLAPSearch.pathToGoal(goal));
-		System.out.println(plan);
+		if(visualize)
+		{
+			System.out.println(LLAPSearch.pathToGoal(goal));
+		}
+//		System.out.println(plan);
 		return plan + ";" + monetaryCost + ";" + nodesExpanded;
 		
 		
