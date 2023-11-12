@@ -69,6 +69,28 @@ public class State {
                 ",\n futureResource=" + futureResource +
                 '}';
     }
+    
+    @Override 
+    public boolean equals(Object o)
+    {
+    	Resource f1 = futureResource == null? new Resource(-1, -1, "HUSSEINYASSER"):((State)o).getFutureResource();
+    	Resource f2 = ((State)o).getFutureResource() == null? new Resource(-1, -1, "HUSSEINYASSER"):((State)o).getFutureResource();
+    	//if(moneySpent != ((State)o).getMoneySpent())
+    		//return false;
+    	if(!food.equals(((State)o).getFood()))
+    		return false;
+    	if(!material.equals(((State)o).getMaterial()))
+    		return false;
+    	if(!energy.equals(((State)o).getEnergy()))
+    		return false;
+    	if(levelOfProsperity != ((State)o).getLevelOfProsperity())
+    		return false;
+    	if(timeRemaining != ((State)o).getTimeRemaining())
+    		return false;
+    	if(!f1.equals(f2))
+    		return false;
+    	return true;
+    }
 
     public double getBudget() {
         return budget;

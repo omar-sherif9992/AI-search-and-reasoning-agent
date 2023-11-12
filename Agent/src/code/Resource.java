@@ -34,6 +34,19 @@ public class Resource {
                 '}';
     }
     
+    @Override
+    public boolean equals(Object o) {
+        if(cost != ((Resource)o).getCost())
+        	return false;
+        if(amount != ((Resource)o).getAmount())
+        	return false;
+        if(name != ((Resource)o).getName())
+        	return false;
+        return true;
+    }
+    
+    
+    
     public double getMAX() {
         return MAX;
     }

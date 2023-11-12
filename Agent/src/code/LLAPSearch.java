@@ -4,6 +4,8 @@ import java.util.*;
 import enums.ResourceEnum;
 
 public class LLAPSearch extends GenericSearch {
+	
+	public static LLAPSearch solver = new LLAPSearch();
    
     public static String solve(String initialState, String strategy, Boolean visualize) {
     	 double budget = 100000;
@@ -27,28 +29,28 @@ public class LLAPSearch extends GenericSearch {
         //System.out.println(initState);
         switch (strategy) {
             case "BF":
-            	return BFS.bfs(tree, visualize, operators, visitedStates);
+            	return solver.bfs(tree, visualize, operators, visitedStates);
              
             case "DF":
-                return DFS.dfs(tree, visualize, operators, visitedStates);
+                return solver.dfs(tree, visualize, operators, visitedStates);
                 
             case "UC":
-                return UniformCost.ucs(tree, visualize, operators, visitedStates);
+                return solver.ucs(tree, visualize, operators, visitedStates);
                 
             case "ID":
-                return IDFS.iterativeDFS(tree, visualize, operators, visitedStates);
+                return solver.iterativeDFS(tree, visualize, operators, visitedStates);
               
             case "GR1":
-                return GreedySearch.greedySearch(tree, visualize, operators, visitedStates, 1);
+                return solver.greedySearch(tree, visualize, operators, visitedStates, 1);
                 
             case "GR2":
-                return GreedySearch.greedySearch(tree, visualize, operators, visitedStates, 2);
+                return solver.greedySearch(tree, visualize, operators, visitedStates, 2);
                
             case "AS1":
-                return AStar.aStar(tree, visualize, operators, visitedStates, 1);
+                return solver.aStar(tree, visualize, operators, visitedStates, 1);
                 
             case "AS2":
-            	return AStar.aStar(tree, visualize, operators, visitedStates, 2);
+            	return solver.aStar(tree, visualize, operators, visitedStates, 2);
                
             default:
             	return "NONE";
@@ -156,30 +158,413 @@ public class LLAPSearch extends GenericSearch {
     	return node.getState().getLevelOfProsperity() >= 100;
     }
 
-    
-    public static String BFS(Tree tree, Boolean visualize, ArrayList<Operator> operators) {
-        return ("BFS");
-    }
+	@Override
+	public String bfs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited) {
+		Queue<Node> queue = new LinkedList<Node>();
+		queue.add(tree.root);
+		
+		Node goal = null;
+		int nodesExpanded = 0;
+		
+		
+		
+		while(queue.size() > 0)
+		{
+			Node currNode = queue.poll();
+			
+			if(LLAPSearch.isGoal(currNode))
+			{
+				
+				goal = currNode;
+				break;
+			}
+			
+			nodesExpanded++;
+			
+			//try the different operators on this node
+			for(Operator operator : operators)
+			{
+				State tst = currNode.getState();
+				State newState = operator.apply(tst);
+				if( newState == null || visited.contains(newState.toString()) )
+				{
+					continue;
+				}
 
-    public static String DFS(Tree tree, Boolean visualize) {
-        return ("DFS");
-    }
+				//Here i need to make a new node and push it to the queue
+				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
+				queue.add(child);
+				visited.add(newState.toString());
+			}
+		}
+		
+		if(goal == null)
+		{
+			return "NOSOLUTION";
+		}
+		
+		String plan = LLAPSearch.findPlan(goal);
+		int monetaryCost = (int)goal.getState().getMoneySpent();
+	
+		
+		if(visualize)
+		{
+			System.out.println(LLAPSearch.pathToGoal(goal));
+		}
+//		System.out.println(plan);
+		return plan + ";" + monetaryCost + ";" + nodesExpanded;
+	}
+	
+	@Override
+	public String dfs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited)
+	{
+		Stack<Node> stack = new Stack<Node>();
+		stack.push(tree.root);
+		
+		int nodesExpanded = 0;
+		
+		Node goal = null;
 
-    public static String UCS(Tree tree, Boolean visualize) {
-        return ("UCS");
+		while(stack.size() > 0)
+		{
+			Node currNode = stack.pop();
+			
+			if(LLAPSearch.isGoal(currNode))
+			{
+				goal = currNode;
+				break;
+			}
+			
+			nodesExpanded++;
+			
+			//start expanding this node
+			for(Operator operator : operators)
+			{
+				State newState = operator.apply(currNode.getState());
+				if(newState == null || visited.contains(newState.toString()))
+				{
+					//Here i can't branch with this operator
+					continue;
+				}
+				//Here i need to make a new node and push it to the stack
+				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
+				stack.push(child);
+				visited.add(newState.toString());
+			}
+		}
+		
+		if(goal == null)
+			return "NOSOLUTION";
+		
+		String plan = LLAPSearch.findPlan(goal);
+		int monetaryCost = (int)goal.getState().getMoneySpent();
+		
+		if(visualize)
+		{
+			System.out.println(LLAPSearch.pathToGoal(goal));
+		}
+		return plan + ";" + monetaryCost + ";" + nodesExpanded;
+		
+	}
+	
+	@Override
+	public String iterativeDFS(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited)
+	{
+		int depth = 0;
+		while(true)
+		{
+			visited = new HashSet<String>();
+			
+			String currSolution = dfsSpecial(tree, visualize, operators, depth, visited);
+	
+			if(currSolution != "NOSOLUTION" && currSolution != "I NEED MORE LEVELS" )
+				return currSolution;
+			if(currSolution != "I NEED MORE LEVELS")
+			{
+				break;
+			}
+			depth++;
+		}
+		return "NOSOLUTION";
+	}
+	
+	
+	public static String dfsSpecial(Tree tree, boolean visualize, ArrayList<Operator> operators, int mxLevel, HashSet<String> visited)
+	{
+		Stack<Node> stack = new Stack<Node>();
+		stack.push(tree.root);
+		int nodesExpanded = 0;
+		Node goal = null;
+		boolean flag = false;
+		while(stack.size() > 0)
+		{
+			Node currNode = stack.pop();
+			
+			if(LLAPSearch.isGoal(currNode))
+			{
+				goal = currNode;
+				break;
+			}
+			nodesExpanded++;
+			//start expanding this node
+			for(Operator operator : operators)
+			{
+				State newState = operator.apply(currNode.getState());
+				if(currNode.getLevel() + 1 > mxLevel)
+				{
+					flag = true;
+					continue;
+				}
+				if(newState == null || visited.contains(newState.toString()))
+				{
+					//Here i can't branch with this operator
+					continue;
+				}
+				//Here i need to make a new node and push it to the stack
+				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
+				stack.push(child);
+				visited.add(newState.toString());
+			}
+		}
+		if(flag == true && goal == null)
+			return "I NEED MORE LEVELS";
+		
+		if(goal == null)
+			return "NOSOLUTION";
+		
+		String plan = LLAPSearch.findPlan(goal);
+		int monetaryCost = (int)goal.getState().getMoneySpent();
+		
+		if(visualize)
+		{
+			System.out.println(LLAPSearch.pathToGoal(goal));
+		}
+		return plan + ";" + monetaryCost + ";" + nodesExpanded;
+	}
+	
+	@Override
+	public String ucs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited)
+	{
+		
+		Comparator<Node> customComparator = (a, b) -> Double.compare(a.getState().getMoneySpent(), b.getState().getMoneySpent());
+		
+		PriorityQueue<Node> pq = new PriorityQueue<Node>(customComparator);
+		
+		pq.add(tree.root);
+		
+		Node goal = null;
+		int nodesExpanded = 0;
+		
+		
+		
+		while(pq.size() > 0)
+		{
+			Node currNode = pq.poll();
+			
+			if(LLAPSearch.isGoal(currNode))
+			{
+				
+				goal = currNode;
+				break;
+			}
+			
+			nodesExpanded++;
+			
+			//try the different operators on this node
+			for(Operator operator : operators)
+			{
+				State newState = operator.apply(currNode.getState());
+				if(newState == null || visited.contains(newState.toString()))
+				{
+					//Here i can't branch with this operator
+					continue;
+				}
+				//Here i need to make a new node and push it to the queue
+				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
+				pq.add(child);
+				visited.add(newState.toString());
+			}
+		}
+		if(goal == null)
+		{
+			return "NOSOLUTION";
+		}
+		
+		String plan = LLAPSearch.findPlan(goal);
+		int monetaryCost = (int)goal.getState().getMoneySpent();
+	
+		
+		if(visualize)
+		{
+			System.out.println(LLAPSearch.pathToGoal(goal));
+		}
+		return plan + ";" + monetaryCost + ";" + nodesExpanded;
+		
+	}
+	
+	@Override
+	public String greedySearch(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates, int heuristicNumber) {
+        Comparator<Node> customComparator1 = (a, b) -> Double.compare(heuristic1(a.getState(), operators), heuristic1(b.getState(), operators));
+        Comparator<Node> customComparator2 = (a, b) -> Double.compare(heuristic2(a.getState(), operators), heuristic2(b.getState(), operators));
+        
+        
+        PriorityQueue<Node> pq = new PriorityQueue<Node>((heuristicNumber)== 1 ? customComparator1:customComparator2);
+        
+        pq.add(tree.root);
+        
+        Node goal = null;
+        int nodesExpanded = 0;
+        while(pq.size() > 0)
+		{
+			Node currNode = pq.poll();
+			
+			if(LLAPSearch.isGoal(currNode))
+			{
+				
+				goal = currNode;
+				break;
+			}
+			
+			nodesExpanded++;
+			
+			//try the different operators on this node
+			for(Operator operator : operators)
+			{
+				State newState = operator.apply(currNode.getState());
+				if(newState == null || visitedStates.contains(newState.toString()))
+				{
+					//Here i can't branch with this operator
+					continue;
+				}
+				//Here i need to make a new node and push it to the queue
+				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
+				pq.add(child);
+				visitedStates.add(newState.toString());
+			}
+		}
+		if(goal == null)
+		{
+			return "NOSOLUTION";
+		}
+		
+		String plan = LLAPSearch.findPlan(goal);
+		int monetaryCost = (int)goal.getState().getMoneySpent();
+	
+		
+		if(visualize)
+		{
+			System.out.println(LLAPSearch.pathToGoal(goal));
+		}
+		return plan + ";" + monetaryCost + ";" + nodesExpanded;
     }
+	
+	
+	public static double heuristic1(State state, ArrayList<Operator> operators)
+	{
+		double mx = 0;
+		double mn = Integer.MAX_VALUE;
+		for(Operator operator : operators)
+		{
+			if(operator.name.equals("BUILD1") || operator.name.equals("BUILD2")) {
+				mx = Math.max(mx, ((BuildAction)operator).addProsperity);
+				double buildCost = ((BuildAction)operator).cost + ((BuildAction)operator).getUnitsOfFood()*state.getFood().getCost()
+						+  ((BuildAction)operator).getUnitsOfEnergy()*state.getEnergy().getCost()
+						+  ((BuildAction)operator).getUnitsOfMaterial()*state.getMaterial().getCost();
+				mn = Math.min(mn, buildCost);
+			}
+			
+		}
+		return ( (100 - state.getLevelOfProsperity() ) / mx)  * mn;
+		
+	}
+	
+	public static double heuristic2(State state, ArrayList<Operator> operators)
+	{
+		double mxPros = 0;
+		double buildNeededFood = Integer.MAX_VALUE;
+		for(Operator operator : operators)
+		{
+			if(operator.name.equals("BUILD1") || operator.name.equals("BUILD2")) {
+				//needed food 
+				mxPros = Math.max(((BuildAction)operator).addProsperity, mxPros);
+				buildNeededFood = Math.min(((BuildAction)operator).getUnitsOfFood(), buildNeededFood);
+			}
+		}
+		int remBuilds = (int)( (100 - state.getLevelOfProsperity()) / mxPros) + (int)( ((int)((100 - state.getLevelOfProsperity()) % mxPros) != 0)? 1:0);
+		int remFood = Math.max((int)(remBuilds*buildNeededFood - state.getFood().getAmount()), 0);
+		
+		//Now how many food requests needed to get that food?
+		Operator op = null;
+		for(Operator i : operators)
+		{
+			if(i.name.equals("REQUEST FOOD"))
+			{
+				op = i;
+				break;
+			}
+		}
+		int foodRequestActionsNeeded = remFood / ((RequestAction)op).getAddedAmount();
+		double costOfReqFood = (state.getFood().getCost() + state.getMaterial().getCost() + state.getEnergy().getCost()) * foodRequestActionsNeeded;
+		return costOfReqFood;		
+		
+	}
 
-    public static String IDS(Tree tree, Boolean visualize) {
-        return ("IDS");
-    }
-
-    public static String GREEDY(Tree tree, Boolean visualize) {
-        return ("GREEDY");
-    }
-
-    public static String ASTAR(Tree tree, Boolean visualize) {
-        return ("ASTAR");
-    }
+	@Override
+	public String aStar(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates,
+			int heuristicNumber) {
+		Comparator<Node> customComparator1 = (a, b) -> Double.compare(GreedySearch.heuristic1(a.getState(), operators) + a.getState().getMoneySpent(),GreedySearch.heuristic1(b.getState(), operators) + b.getState().getMoneySpent());
+        Comparator<Node> customComparator2 = (a, b) -> Double.compare(GreedySearch.heuristic2(a.getState(), operators) + a.getState().getMoneySpent(),GreedySearch.heuristic2(b.getState(), operators) + b.getState().getMoneySpent());
+        
+        PriorityQueue<Node> pq = new PriorityQueue<Node>(heuristicNumber == 1 ? customComparator1:customComparator2);
+        
+        pq.add(tree.root);
+        
+        Node goal = null;
+        int nodesExpanded = 0;
+        while(pq.size() > 0)
+		{
+			Node currNode = pq.poll();
+			
+			if(LLAPSearch.isGoal(currNode))
+			{
+				
+				goal = currNode;
+				break;
+			}
+			
+			nodesExpanded++;
+			
+			//try the different operators on this node
+			for(Operator operator : operators)
+			{
+				State newState = operator.apply(currNode.getState());
+				if(newState == null || visitedStates.contains(newState.toString()))
+				{
+					//Here i can't branch with this operator
+					continue;
+				}
+				//Here i need to make a new node and push it to the queue
+				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
+				pq.add(child);
+				visitedStates.add(newState.toString());
+			}
+		}
+		if(goal == null)
+		{
+			return "NOSOLUTION";
+		}
+		
+		String plan = LLAPSearch.findPlan(goal);
+		int monetaryCost = (int)goal.getState().getMoneySpent();
+	
+		if(visualize)
+		{
+			System.out.println(LLAPSearch.pathToGoal(goal));
+		}
+		return plan + ";" + monetaryCost + ";" + nodesExpanded;
+	}
+	
+	
     
     
     

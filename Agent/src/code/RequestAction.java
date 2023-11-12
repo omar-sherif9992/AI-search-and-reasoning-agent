@@ -9,7 +9,7 @@ public class RequestAction extends Operator {
 
     public RequestAction(String name, int addedAmount, int delay) {
         super(name);
-        this.addedAmount = addedAmount;
+        this.setAddedAmount(addedAmount);
         this.delay = delay;
     }
 
@@ -37,20 +37,36 @@ public class RequestAction extends Operator {
 
         switch (this.name) {
             case ResourceEnum.ENERGY:
-                futureResource = new Resource(state.getEnergy().getCost(), this.addedAmount, this.name);
+                futureResource = new Resource(state.getEnergy().getCost(), this.getAddedAmount(), this.name);
                 break;
             case ResourceEnum.FOOD:
-                futureResource = new Resource(state.getFood().getCost(), this.addedAmount, this.name);
+                futureResource = new Resource(state.getFood().getCost(), this.getAddedAmount(), this.name);
                 break;
             case ResourceEnum.MATERIAL:
-                futureResource = new Resource(state.getMaterial().getCost(), this.addedAmount, this.name);
+                futureResource = new Resource(state.getMaterial().getCost(), this.getAddedAmount(), this.name);
                 break;
+        }
+        
+        switch (this.name) {
+        case ResourceEnum.ENERGY:
+            if(state.getEnergy().getAmount() == 50)
+            	return null;
+            break;
+        case ResourceEnum.FOOD:
+        	if(state.getFood().getAmount() == 50)
+            	return null;
+            break;
+        case ResourceEnum.MATERIAL:
+        	if(state.getMaterial().getAmount() == 50)
+            	return null;
+            break;
         }
 
         double newMoneySpent = (state.getFood().getCost() * this.deductAmount) + (state.getMaterial().getCost() * this.deductAmount) + (state.getEnergy().getCost() * this.deductAmount);
         if (state.getBudget() < newMoneySpent) {
             return null;
         }
+        
 
         double newBudget = state.getBudget() - newMoneySpent;
         newMoneySpent += state.getMoneySpent();
@@ -74,5 +90,15 @@ public class RequestAction extends Operator {
         );
         return newState;
     }
+
+
+	public int getAddedAmount() {
+		return addedAmount;
+	}
+
+
+	public void setAddedAmount(int addedAmount) {
+		this.addedAmount = addedAmount;
+	}
 
 }
