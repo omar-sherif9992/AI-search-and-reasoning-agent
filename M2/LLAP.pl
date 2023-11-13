@@ -1,5 +1,8 @@
 :- include('KB2.pl').
 
+% COMMAND FOR LONG OUTPUT LENGTH
+% set_prolog_flag(answer_write_options,[max_depth(0)]).
+
 
 % Initial State Definintion
 intitial_state(S):-
