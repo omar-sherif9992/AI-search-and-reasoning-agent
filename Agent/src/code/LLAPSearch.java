@@ -223,6 +223,8 @@ public class LLAPSearch extends GenericSearch {
 		int nodesExpanded = 0;
 		
 		Node goal = null;
+		List<Operator> reversedList = new ArrayList<Operator>(operators);
+        Collections.reverse(reversedList);
 
 		while(stack.size() > 0)
 		{
@@ -237,7 +239,7 @@ public class LLAPSearch extends GenericSearch {
 			nodesExpanded++;
 			
 			//start expanding this node
-			for(Operator operator : operators)
+			for(Operator operator : reversedList)
 			{
 				State newState = operator.apply(currNode.getState());
 				if(newState == null || visited.contains(newState.toString()))
@@ -270,18 +272,26 @@ public class LLAPSearch extends GenericSearch {
 	public String iterativeDFS(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited)
 	{
 		int depth = 0;
+		int accumlated_expanded = 0;
 		while(true)
 		{
 			visited = new HashSet<String>();
 			
 			String currSolution = dfsSpecial(tree, visualize, operators, depth, visited);
 	
-			if(currSolution != "NOSOLUTION" && currSolution != "I NEED MORE LEVELS" )
-				return currSolution;
-			if(currSolution != "I NEED MORE LEVELS")
+			if(currSolution != "NOSOLUTION" && !(currSolution.split(";")[0]).equals("I NEED MORE LEVELS" )) {
+				String plan = currSolution.split(";")[0];
+				String monetaryCost = currSolution.split(";")[1];
+				String ans = plan + ";" + monetaryCost + ";" + (accumlated_expanded+  Integer.parseInt(currSolution.split(";")[2]));
+				return ans;
+			}
+			if(!(currSolution.split(";")[0]).equals("I NEED MORE LEVELS" ))
 			{
+				
 				break;
 			}
+			int lvlNodes = Integer.parseInt(currSolution.split(";")[1]);
+			accumlated_expanded += lvlNodes;
 			depth++;
 		}
 		return "NOSOLUTION";
@@ -294,6 +304,8 @@ public class LLAPSearch extends GenericSearch {
 		int nodesExpanded = 0;
 		Node goal = null;
 		boolean flag = false;
+		List<Operator> reversedList = new ArrayList<Operator>(operators);
+        Collections.reverse(reversedList);
 		while(stack.size() > 0)
 		{
 			Node currNode = stack.pop();
@@ -305,7 +317,7 @@ public class LLAPSearch extends GenericSearch {
 			}
 			nodesExpanded++;
 			//start expanding this node
-			for(Operator operator : operators)
+			for(Operator operator : reversedList)
 			{
 				State newState = operator.apply(currNode.getState());
 				if(currNode.getLevel() + 1 > mxLevel)
@@ -325,7 +337,7 @@ public class LLAPSearch extends GenericSearch {
 			}
 		}
 		if(flag == true && goal == null)
-			return "I NEED MORE LEVELS";
+			return "I NEED MORE LEVELS;"+nodesExpanded;
 		
 		if(goal == null)
 			return "NOSOLUTION";
@@ -396,8 +408,6 @@ public class LLAPSearch extends GenericSearch {
 		{
 			System.out.println(LLAPSearch.pathToGoal(goal));
 		}
-		System.out.println(plan);
-		System.out.println(monetaryCost + " " + nodesExpanded);
 		return plan + ";" + monetaryCost + ";" + nodesExpanded;
 		
 	}
@@ -522,7 +532,6 @@ public class LLAPSearch extends GenericSearch {
 		double costOfReqMaterial = (state.getFood().getCost() + state.getMaterial().getCost() + state.getEnergy().getCost()) * materialRequestActionsNeeded;
 		
 		return costOfReqMaterial + costOfReqFood;
-		
 	}
 
 	@Override
@@ -577,8 +586,6 @@ public class LLAPSearch extends GenericSearch {
 		{
 			System.out.println(LLAPSearch.pathToGoal(goal));
 		}
-		System.out.println(plan);
-		System.out.println(monetaryCost + " " + nodesExpanded);
 		return plan + ";" + monetaryCost + ";" + nodesExpanded;
 	}
 	
