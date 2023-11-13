@@ -396,6 +396,8 @@ public class LLAPSearch extends GenericSearch {
 		{
 			System.out.println(LLAPSearch.pathToGoal(goal));
 		}
+		System.out.println(plan);
+		System.out.println(monetaryCost + " " + nodesExpanded);
 		return plan + ";" + monetaryCost + ";" + nodesExpanded;
 		
 	}
@@ -472,7 +474,7 @@ public class LLAPSearch extends GenericSearch {
 			}
 			
 		}
-		return ( (100 - state.getLevelOfProsperity() ) / mx)  * mn;
+		return ( Math.max(100 - state.getLevelOfProsperity(), 0 ) / mx)  * mn;
 		
 	}
 	
@@ -488,8 +490,8 @@ public class LLAPSearch extends GenericSearch {
 				buildNeededFood = Math.min(((BuildAction)operator).getUnitsOfFood(), buildNeededFood);
 			}
 		}
-		int remBuilds = (int)( (100 - state.getLevelOfProsperity()) / mxPros) + (int)( ((int)((100 - state.getLevelOfProsperity()) % mxPros) != 0)? 1:0);
-		int remFood = Math.max((int)(remBuilds*buildNeededFood - state.getFood().getAmount()), 0);
+		int remBuilds = (int)( Math.max(100 - state.getLevelOfProsperity(), 0) / mxPros) + (int)( ((int)(Math.max(100 - state.getLevelOfProsperity(), 0) % mxPros) != 0)? 1:0);
+		int remFood = Math.max((int)((remBuilds*buildNeededFood) - state.getFood().getAmount()), 0);
 		
 		//Now how many food requests needed to get that food?
 		Operator op = null;
@@ -503,15 +505,31 @@ public class LLAPSearch extends GenericSearch {
 		}
 		int foodRequestActionsNeeded = remFood / ((RequestAction)op).getAddedAmount();
 		double costOfReqFood = (state.getFood().getCost() + state.getMaterial().getCost() + state.getEnergy().getCost()) * foodRequestActionsNeeded;
-		return costOfReqFood;		
+		
+		int remMaterial = Math.max((int)((remBuilds*buildNeededFood) - state.getMaterial().getAmount()), 0);
+		
+		//Now how many food requests needed to get that food?
+		op = null;
+		for(Operator i : operators)
+		{
+			if(i.name.equals("REQUEST MATERIALS"))
+			{
+				op = i;
+				break;
+			}
+		}
+		int materialRequestActionsNeeded = remMaterial / ((RequestAction)op).getAddedAmount();
+		double costOfReqMaterial = (state.getFood().getCost() + state.getMaterial().getCost() + state.getEnergy().getCost()) * materialRequestActionsNeeded;
+		
+		return costOfReqMaterial + costOfReqFood;
 		
 	}
 
 	@Override
 	public String aStar(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates,
 			int heuristicNumber) {
-		Comparator<Node> customComparator1 = (a, b) -> Double.compare(GreedySearch.heuristic1(a.getState(), operators) + a.getState().getMoneySpent(),GreedySearch.heuristic1(b.getState(), operators) + b.getState().getMoneySpent());
-        Comparator<Node> customComparator2 = (a, b) -> Double.compare(GreedySearch.heuristic2(a.getState(), operators) + a.getState().getMoneySpent(),GreedySearch.heuristic2(b.getState(), operators) + b.getState().getMoneySpent());
+		Comparator<Node> customComparator1 = (a, b) -> Double.compare(heuristic1(a.getState(), operators) + a.getState().getMoneySpent(),heuristic1(b.getState(), operators) + b.getState().getMoneySpent());
+        Comparator<Node> customComparator2 = (a, b) -> Double.compare(heuristic2(a.getState(), operators) + a.getState().getMoneySpent(),heuristic2(b.getState(), operators) + b.getState().getMoneySpent());
         
         PriorityQueue<Node> pq = new PriorityQueue<Node>(heuristicNumber == 1 ? customComparator1:customComparator2);
         
@@ -559,6 +577,8 @@ public class LLAPSearch extends GenericSearch {
 		{
 			System.out.println(LLAPSearch.pathToGoal(goal));
 		}
+		System.out.println(plan);
+		System.out.println(monetaryCost + " " + nodesExpanded);
 		return plan + ";" + monetaryCost + ";" + nodesExpanded;
 	}
 	

@@ -1,3 +1,4 @@
+/*
 package code;
 
 import java.util.ArrayList;
@@ -82,3 +83,4 @@ public class GreedySearch {
 		return plan + ";" + monetaryCost + ";" + nodesExpanded;
     }
 }
+*/
