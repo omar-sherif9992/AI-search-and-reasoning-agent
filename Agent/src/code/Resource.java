@@ -1,4 +1,6 @@
 package code;
+import java.util.Objects;
+
 import enums.ResourceEnum;
 
 public class Resource {
@@ -43,6 +45,19 @@ public class Resource {
         if(name != ((Resource)o).getName())
         	return false;
         return true;
+    }
+    
+    @Override
+    public int hashCode() {
+    	final int prime = 31; // Choose a prime number for multiplication
+        int result = 17; // Another prime number, acts as a starting value
+
+        // Include the hash codes of each field
+        result = prime * result + Double.hashCode(cost);
+        result = prime * result + Double.hashCode(amount);
+        result = prime * result + Objects.hashCode(name);
+        
+        return result;
     }
     
     

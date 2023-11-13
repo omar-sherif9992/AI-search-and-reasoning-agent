@@ -1,4 +1,6 @@
 package code;
+import java.util.Objects;
+
 import enums.ResourceEnum;
 
 public class State {
@@ -67,7 +69,7 @@ public class State {
                 ",\n levelOfProsperity=" + levelOfProsperity +
                 ",\n timeRemaining=" + timeRemaining +
                 ",\n futureResource=" + futureResource +
-                '}';
+               '}';
     }
     
     @Override 
@@ -75,8 +77,8 @@ public class State {
     {
     	Resource f1 = futureResource == null? new Resource(-1, -1, "HUSSEINYASSER"):((State)o).getFutureResource();
     	Resource f2 = ((State)o).getFutureResource() == null? new Resource(-1, -1, "HUSSEINYASSER"):((State)o).getFutureResource();
-    	//if(moneySpent != ((State)o).getMoneySpent())
-    		//return false;
+    	if(moneySpent != ((State)o).getMoneySpent())
+    		return false;
     	if(!food.equals(((State)o).getFood()))
     		return false;
     	if(!material.equals(((State)o).getMaterial()))
@@ -91,6 +93,24 @@ public class State {
     		return false;
     	return true;
     }
+    
+    @Override
+    public int hashCode() {
+    	final int prime = 31; // Choose a prime number for multiplication
+        int result = 17; // Another prime number, acts as a starting value
+
+        // Include the hash codes of each field
+        //result = prime * result + Double.hashCode(moneySpent);
+        result = prime * result + Objects.hashCode(food);
+        result = prime * result + Objects.hashCode(material);
+        result = prime * result + Objects.hashCode(energy);
+        result = prime * result + Integer.hashCode(timeRemaining);
+        result = prime * result + Double.hashCode(levelOfProsperity);
+        result = prime * result + Objects.hashCode(futureResource);
+
+        return result;
+    }
+    
 
     public double getBudget() {
         return budget;
@@ -134,7 +154,6 @@ public class State {
     	if(this.timeRemaining <= 1 && this.futureResource != null)
     	{
     		//Here delivery done
-    		
     		double addedAmount = this.getFutureResource().getAmount();
             switch (this.getFutureResource().getName()){
                 case ResourceEnum.ENERGY : this.energy.setAmount(

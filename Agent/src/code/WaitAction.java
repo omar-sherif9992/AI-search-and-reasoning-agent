@@ -30,6 +30,8 @@ public class WaitAction extends Operator {
         
         double currMoneySpent =  (state.getFood().getCost() + state.getMaterial().getCost() + state.getEnergy().getCost());
         
+        
+        
         return new State(
         		currMoneySpent + state.getMoneySpent(),
                 newFoodResource,

@@ -158,7 +158,7 @@ public class LLAPSearch extends GenericSearch {
     	return node.getState().getLevelOfProsperity() >= 100;
     }
 
-	@Override
+	
 	public String bfs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited) {
 		Queue<Node> queue = new LinkedList<Node>();
 		queue.add(tree.root);
@@ -184,8 +184,7 @@ public class LLAPSearch extends GenericSearch {
 			//try the different operators on this node
 			for(Operator operator : operators)
 			{
-				State tst = currNode.getState();
-				State newState = operator.apply(tst);
+				State newState = operator.apply(currNode.getState());
 				if( newState == null || visited.contains(newState.toString()) )
 				{
 					continue;
@@ -287,7 +286,6 @@ public class LLAPSearch extends GenericSearch {
 		}
 		return "NOSOLUTION";
 	}
-	
 	
 	public static String dfsSpecial(Tree tree, boolean visualize, ArrayList<Operator> operators, int mxLevel, HashSet<String> visited)
 	{
