@@ -6,7 +6,7 @@ import java.util.*;
 public class UniformCost {
 	
 	
-	public static String ucs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited)
+	public static String ucs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<State> visited)
 	{
 		
 		Comparator<Node> customComparator = (a, b) -> Double.compare(a.getState().getMoneySpent(), b.getState().getMoneySpent());
@@ -37,7 +37,7 @@ public class UniformCost {
 			for(Operator operator : operators)
 			{
 				State newState = operator.apply(currNode.getState());
-				if(newState == null || visited.contains(newState.toString()))
+				if(newState == null || visited.contains(newState))
 				{
 					//Here i can't branch with this operator
 					continue;
@@ -45,7 +45,7 @@ public class UniformCost {
 				//Here i need to make a new node and push it to the queue
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				pq.add(child);
-				visited.add(newState.toString());
+				visited.add(newState);
 			}
 		}
 		if(goal == null)

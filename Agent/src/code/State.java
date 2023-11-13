@@ -75,40 +75,38 @@ public class State {
     @Override 
     public boolean equals(Object o)
     {
-    	Resource f1 = futureResource == null? new Resource(-1, -1, "HUSSEINYASSER"):((State)o).getFutureResource();
-    	Resource f2 = ((State)o).getFutureResource() == null? new Resource(-1, -1, "HUSSEINYASSER"):((State)o).getFutureResource();
-    	if(moneySpent != ((State)o).getMoneySpent())
+        if (o == this) { 
+            return true; 
+        }
+        if (!(o instanceof State)) { 
+            return false; 
+        }
+        State other = (State) o;
+
+    	// Resource f1 = futureResource == null? new Resource(-1, -1, "HUSSEINYASSER"):other.getFutureResource();
+
+    	// Resource f2 = other.getFutureResource() == null? new Resource(-1, -1, "HUSSEINYASSER"):other.getFutureResource();
+    	if(moneySpent != other.moneySpent)
     		return false;
-    	if(!food.equals(((State)o).getFood()))
+    	if(!food.equals(other.food))
     		return false;
-    	if(!material.equals(((State)o).getMaterial()))
+    	if(!material.equals(other.material))
     		return false;
-    	if(!energy.equals(((State)o).getEnergy()))
+    	if(!energy.equals(other.energy))
     		return false;
-    	if(levelOfProsperity != ((State)o).getLevelOfProsperity())
+    	if(levelOfProsperity != other.levelOfProsperity)
     		return false;
-    	if(timeRemaining != ((State)o).getTimeRemaining())
+    	if(timeRemaining != other.timeRemaining)
     		return false;
-    	if(!f1.equals(f2))
-    		return false;
-    	return true;
+        
+    	if (futureResource == null) return other.futureResource == null;
+        if (other.futureResource == null) return false;
+        return futureResource.equals(other.futureResource);
     }
     
     @Override
     public int hashCode() {
-    	final int prime = 31; // Choose a prime number for multiplication
-        int result = 17; // Another prime number, acts as a starting value
-
-        // Include the hash codes of each field
-        //result = prime * result + Double.hashCode(moneySpent);
-        result = prime * result + Objects.hashCode(food);
-        result = prime * result + Objects.hashCode(material);
-        result = prime * result + Objects.hashCode(energy);
-        result = prime * result + Integer.hashCode(timeRemaining);
-        result = prime * result + Double.hashCode(levelOfProsperity);
-        result = prime * result + Objects.hashCode(futureResource);
-
-        return result;
+    	return Objects.hash(moneySpent, food, material, energy, timeRemaining, levelOfProsperity, futureResource);        
     }
     
 

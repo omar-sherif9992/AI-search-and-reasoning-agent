@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
 public class AStar {
 
 	
-    public static String aStar(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates, int heuristicNumber) {
+    public static String aStar(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<State> visitedStates, int heuristicNumber) {
         Comparator<Node> customComparator1 = (a, b) -> Double.compare(GreedySearch.heuristic1(a.getState(), operators) + a.getState().getMoneySpent(),GreedySearch.heuristic1(b.getState(), operators) + b.getState().getMoneySpent());
         Comparator<Node> customComparator2 = (a, b) -> Double.compare(GreedySearch.heuristic2(a.getState(), operators) + a.getState().getMoneySpent(),GreedySearch.heuristic2(b.getState(), operators) + b.getState().getMoneySpent());
         
@@ -36,7 +36,7 @@ public class AStar {
 			for(Operator operator : operators)
 			{
 				State newState = operator.apply(currNode.getState());
-				if(newState == null || visitedStates.contains(newState.toString()))
+				if(newState == null || visitedStates.contains(newState))
 				{
 					//Here i can't branch with this operator
 					continue;
@@ -44,7 +44,7 @@ public class AStar {
 				//Here i need to make a new node and push it to the queue
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				pq.add(child);
-				visitedStates.add(newState.toString());
+				visitedStates.add(newState);
 			}
 		}
 		if(goal == null)

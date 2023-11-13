@@ -10,7 +10,7 @@ public class LLAPSearch extends GenericSearch {
     public static String solve(String initialState, String strategy, Boolean visualize) {
     	 double budget = 100000;
     	 ArrayList<Operator> operators = new ArrayList<Operator>();
-    	 HashSet<String> visitedStates = new HashSet<String>();
+    	 HashSet<State> visitedStates = new HashSet<State>();
 
         String[] splitInitialState = initialState.split(";");
         String[] splitResource = splitInitialState[1].split(",");
@@ -159,7 +159,7 @@ public class LLAPSearch extends GenericSearch {
     }
 
 	
-	public String bfs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited) {
+	public String bfs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<State> visited) {
 		Queue<Node> queue = new LinkedList<Node>();
 		queue.add(tree.root);
 		
@@ -185,7 +185,7 @@ public class LLAPSearch extends GenericSearch {
 			for(Operator operator : operators)
 			{
 				State newState = operator.apply(currNode.getState());
-				if( newState == null || visited.contains(newState.toString()) )
+				if( newState == null || visited.contains(newState) )
 				{
 					continue;
 				}
@@ -193,7 +193,7 @@ public class LLAPSearch extends GenericSearch {
 				//Here i need to make a new node and push it to the queue
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				queue.add(child);
-				visited.add(newState.toString());
+				visited.add(newState);
 			}
 		}
 		
@@ -215,7 +215,7 @@ public class LLAPSearch extends GenericSearch {
 	}
 	
 	@Override
-	public String dfs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited)
+	public String dfs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<State> visited)
 	{
 		Stack<Node> stack = new Stack<Node>();
 		stack.push(tree.root);
@@ -242,7 +242,7 @@ public class LLAPSearch extends GenericSearch {
 			for(Operator operator : reversedList)
 			{
 				State newState = operator.apply(currNode.getState());
-				if(newState == null || visited.contains(newState.toString()))
+				if(newState == null || visited.contains(newState))
 				{
 					//Here i can't branch with this operator
 					continue;
@@ -250,7 +250,7 @@ public class LLAPSearch extends GenericSearch {
 				//Here i need to make a new node and push it to the stack
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				stack.push(child);
-				visited.add(newState.toString());
+				visited.add(newState);
 			}
 		}
 		
@@ -269,13 +269,13 @@ public class LLAPSearch extends GenericSearch {
 	}
 	
 	@Override
-	public String iterativeDFS(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited)
+	public String iterativeDFS(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<State> visited)
 	{
 		int depth = 0;
 		int accumlated_expanded = 0;
 		while(true)
 		{
-			visited = new HashSet<String>();
+			visited = new HashSet<State>();
 			
 			String currSolution = dfsSpecial(tree, visualize, operators, depth, visited);
 	
@@ -297,7 +297,7 @@ public class LLAPSearch extends GenericSearch {
 		return "NOSOLUTION";
 	}
 	
-	public static String dfsSpecial(Tree tree, boolean visualize, ArrayList<Operator> operators, int mxLevel, HashSet<String> visited)
+	public static String dfsSpecial(Tree tree, boolean visualize, ArrayList<Operator> operators, int mxLevel, HashSet<State> visited)
 	{
 		Stack<Node> stack = new Stack<Node>();
 		stack.push(tree.root);
@@ -325,7 +325,7 @@ public class LLAPSearch extends GenericSearch {
 					flag = true;
 					continue;
 				}
-				if(newState == null || visited.contains(newState.toString()))
+				if(newState == null || visited.contains(newState))
 				{
 					//Here i can't branch with this operator
 					continue;
@@ -333,7 +333,7 @@ public class LLAPSearch extends GenericSearch {
 				//Here i need to make a new node and push it to the stack
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				stack.push(child);
-				visited.add(newState.toString());
+				visited.add(newState);
 			}
 		}
 		if(flag == true && goal == null)
@@ -353,7 +353,7 @@ public class LLAPSearch extends GenericSearch {
 	}
 	
 	@Override
-	public String ucs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited)
+	public String ucs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<State> visited)
 	{
 		
 		Comparator<Node> customComparator = (a, b) -> Double.compare(a.getState().getMoneySpent(), b.getState().getMoneySpent());
@@ -384,7 +384,7 @@ public class LLAPSearch extends GenericSearch {
 			for(Operator operator : operators)
 			{
 				State newState = operator.apply(currNode.getState());
-				if(newState == null || visited.contains(newState.toString()))
+				if(newState == null || visited.contains(newState))
 				{
 					//Here i can't branch with this operator
 					continue;
@@ -392,7 +392,7 @@ public class LLAPSearch extends GenericSearch {
 				//Here i need to make a new node and push it to the queue
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				pq.add(child);
-				visited.add(newState.toString());
+				visited.add(newState);
 			}
 		}
 		if(goal == null)
@@ -413,7 +413,7 @@ public class LLAPSearch extends GenericSearch {
 	}
 	
 	@Override
-	public String greedySearch(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates, int heuristicNumber) {
+	public String greedySearch(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<State> visitedStates, int heuristicNumber) {
         Comparator<Node> customComparator1 = (a, b) -> Double.compare(heuristic1(a.getState(), operators), heuristic1(b.getState(), operators));
         Comparator<Node> customComparator2 = (a, b) -> Double.compare(heuristic2(a.getState(), operators), heuristic2(b.getState(), operators));
         
@@ -441,7 +441,7 @@ public class LLAPSearch extends GenericSearch {
 			for(Operator operator : operators)
 			{
 				State newState = operator.apply(currNode.getState());
-				if(newState == null || visitedStates.contains(newState.toString()))
+				if(newState == null || visitedStates.contains(newState))
 				{
 					//Here i can't branch with this operator
 					continue;
@@ -449,7 +449,7 @@ public class LLAPSearch extends GenericSearch {
 				//Here i need to make a new node and push it to the queue
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				pq.add(child);
-				visitedStates.add(newState.toString());
+				visitedStates.add(newState);
 			}
 		}
 		if(goal == null)
@@ -535,7 +535,7 @@ public class LLAPSearch extends GenericSearch {
 	}
 
 	@Override
-	public String aStar(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates,
+	public String aStar(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<State> visitedStates,
 			int heuristicNumber) {
 		Comparator<Node> customComparator1 = (a, b) -> Double.compare(heuristic1(a.getState(), operators) + a.getState().getMoneySpent(),heuristic1(b.getState(), operators) + b.getState().getMoneySpent());
         Comparator<Node> customComparator2 = (a, b) -> Double.compare(heuristic2(a.getState(), operators) + a.getState().getMoneySpent(),heuristic2(b.getState(), operators) + b.getState().getMoneySpent());
@@ -563,7 +563,7 @@ public class LLAPSearch extends GenericSearch {
 			for(Operator operator : operators)
 			{
 				State newState = operator.apply(currNode.getState());
-				if(newState == null || visitedStates.contains(newState.toString()))
+				if(newState == null || visitedStates.contains(newState))
 				{
 					//Here i can't branch with this operator
 					continue;
@@ -571,7 +571,7 @@ public class LLAPSearch extends GenericSearch {
 				//Here i need to make a new node and push it to the queue
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				pq.add(child);
-				visitedStates.add(newState.toString());
+				visitedStates.add(newState);
 			}
 		}
 		if(goal == null)

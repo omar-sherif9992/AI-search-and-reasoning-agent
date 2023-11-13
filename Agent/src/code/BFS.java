@@ -6,7 +6,7 @@ import java.util.*;
 public class BFS {
 	
 	
-	public static String bfs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited)
+	public static String bfs(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<State> visited)
 	{
 		Queue<Node> queue = new LinkedList<Node>();
 		queue.add(tree.root);
@@ -34,7 +34,7 @@ public class BFS {
 			{
 				State tst = currNode.getState();
 				State newState = operator.apply(tst);
-				if( newState == null || visited.contains(newState.toString()) )
+				if( newState == null || visited.contains(newState) )
 				{
 					continue;
 				}
@@ -42,7 +42,7 @@ public class BFS {
 				//Here i need to make a new node and push it to the queue
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				queue.add(child);
-				visited.add(newState.toString());
+				visited.add(newState);
 			}
 		}
 		

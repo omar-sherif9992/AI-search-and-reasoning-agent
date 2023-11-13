@@ -28,7 +28,7 @@ public class GreedySearch {
 		return ( (100 - state.getLevelOfProsperity() ) / 100)  * state.getMoneySpent();
 	}
     
-    public static String greedySearch(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visitedStates, int heuristicNumber) {
+    public static String greedySearch(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<State> visitedStates, int heuristicNumber) {
         Comparator<Node> customComparator1 = (a, b) -> Double.compare(heuristic1(a.getState(), operators), heuristic1(b.getState(), operators));
         Comparator<Node> customComparator2 = (a, b) -> Double.compare(heuristic2(a.getState(), operators), heuristic2(b.getState(), operators));
         
@@ -56,7 +56,7 @@ public class GreedySearch {
 			for(Operator operator : operators)
 			{
 				State newState = operator.apply(currNode.getState());
-				if(newState == null || visitedStates.contains(newState.toString()))
+				if(newState == null || visitedStates.contains(newState))
 				{
 					//Here i can't branch with this operator
 					continue;
@@ -64,7 +64,7 @@ public class GreedySearch {
 				//Here i need to make a new node and push it to the queue
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				pq.add(child);
-				visitedStates.add(newState.toString());
+				visitedStates.add(newState);
 			}
 		}
 		if(goal == null)

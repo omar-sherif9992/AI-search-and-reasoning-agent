@@ -7,14 +7,14 @@ public class IDFS {
 	
 	static boolean flag = false;
 	
-	public static String iterativeDFS(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<String> visited)
+	public static String iterativeDFS(Tree tree, boolean visualize, ArrayList<Operator> operators, HashSet<State> visited)
 	{
 		
 		int depth = 0;
 		
 		while(true)
 		{
-			visited = new HashSet<String>();
+			visited = new HashSet<State>();
 			flag = false;
 			
 			String currSolution = dfsSpecial(tree, visualize, operators, depth, visited);
@@ -33,7 +33,7 @@ public class IDFS {
 	}
 	
 	
-	public static String dfsSpecial(Tree tree, boolean visualize, ArrayList<Operator> operators, int mxLevel, HashSet<String> visited)
+	public static String dfsSpecial(Tree tree, boolean visualize, ArrayList<Operator> operators, int mxLevel, HashSet<State> visited)
 	{
 		Stack<Node> stack = new Stack<Node>();
 		stack.push(tree.root);
@@ -64,7 +64,7 @@ public class IDFS {
 					flag = true;
 					continue;
 				}
-				if(newState == null || visited.contains(newState.toString()))
+				if(newState == null || visited.contains(newState))
 				{
 					//Here i can't branch with this operator
 					continue;
@@ -73,7 +73,7 @@ public class IDFS {
 				//Here i need to make a new node and push it to the stack
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				stack.push(child);
-				visited.add(newState.toString());
+				visited.add(newState);
 			}
 		}
 		

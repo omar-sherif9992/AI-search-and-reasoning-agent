@@ -1,8 +1,6 @@
 package code;
 import java.util.Objects;
 
-import enums.ResourceEnum;
-
 public class Resource {
 
     private double cost;
@@ -38,26 +36,21 @@ public class Resource {
     
     @Override
     public boolean equals(Object o) {
-        if(cost != ((Resource)o).getCost())
+        if (o == this) return true;
+        if (!(o instanceof Resource)) {
+            return false;
+        }
+        Resource other = (Resource) o;
+        if(cost != other.getCost())
         	return false;
-        if(amount != ((Resource)o).getAmount())
+        if(amount != other.getAmount())
         	return false;
-        if(name != ((Resource)o).getName())
-        	return false;
-        return true;
+        return name.equals(other.getName());
     }
     
     @Override
     public int hashCode() {
-    	final int prime = 31; // Choose a prime number for multiplication
-        int result = 17; // Another prime number, acts as a starting value
-
-        // Include the hash codes of each field
-        result = prime * result + Double.hashCode(cost);
-        result = prime * result + Double.hashCode(amount);
-        result = prime * result + Objects.hashCode(name);
-        
-        return result;
+        return Objects.hash(cost, amount, name);
     }
     
     
