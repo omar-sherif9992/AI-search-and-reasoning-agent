@@ -250,6 +250,10 @@ public class LLAPSearch extends GenericSearch {
 				//Here i need to make a new node and push it to the stack
 				Node child = new Node(newState, currNode.getLevel()+1, currNode, operator);
 				stack.push(child);
+				if (newState.getLevelOfProsperity() >= 40) 
+				{
+					System.out.println("Found goal");
+				}
 				visited.add(newState);
 			}
 		}

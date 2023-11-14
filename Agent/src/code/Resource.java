@@ -3,17 +3,17 @@ import java.util.Objects;
 
 public class Resource {
 
-    private double cost;
-    private double amount;
+    private final double cost;
+    private final double amount;
 
     private final int MAX=50;
 
     
-    private String name;
+    private final String name;
 
-    public Resource( double cost, double amount, String name) {
+    public Resource(double cost, double amount, String name) {
         this.cost = cost;
-        this.amount = amount;
+        this.amount = Math.min(amount, MAX);
         this.name = name;
     }
 
@@ -53,8 +53,6 @@ public class Resource {
         return Objects.hash(cost, amount, name);
     }
     
-    
-    
     public double getMAX() {
         return MAX;
     }
@@ -71,9 +69,6 @@ public class Resource {
         return name;
     }
 
-    public void setAmount(double amount) {
-        this.amount = Math.min(amount,this.MAX);
-        
-    }
+    
 }
 
